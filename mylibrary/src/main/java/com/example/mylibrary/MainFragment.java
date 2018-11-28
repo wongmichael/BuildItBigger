@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;;import static com.example.mylibrary.R.layout.fragment_main;
+import android.widget.Toast;
 
 public class MainFragment extends Fragment {
     public MainFragment(){}
@@ -20,11 +20,13 @@ public class MainFragment extends Fragment {
         //return
         Toast.makeText(getActivity(),"mylibrary MainFrag onCreateView",Toast.LENGTH_LONG).show();
         Log.d("mylibrary mainFragment","onCreateView");
-        View rootView = inflater.inflate(fragment_main,container,false);
-      /*  Intent intent = getActivity().getIntent();
+        View rootView = inflater.inflate(R.layout.fragment_main,container,false);
+
+        Intent intent = getActivity().getIntent();
         String joke = intent.getStringExtra(MainActivity.JOKE_KEY);
         TextView textView = rootView.findViewById(R.id.fragment_main_tv);
-        textView.setText(joke);*/
+        textView.setText(joke);
+
         return rootView;
     }
 }

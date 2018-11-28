@@ -11,7 +11,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.lib_activity_main);
         Toast.makeText(this,"mylibrary mainAct onCreate",Toast.LENGTH_LONG).show();
     }
 }
