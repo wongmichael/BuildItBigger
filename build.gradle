@@ -19,4 +19,9 @@ allprojects {
         jcenter()
         google()
     }
+
+    task testTask(dependsOn: ":backend:appengineStart"){
+        dependsOn ":app:connectedAndroidTest"
+        finalizedBy ":backend:appengineStop"
+    }
 }

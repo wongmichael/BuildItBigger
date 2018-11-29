@@ -5,20 +5,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.udacity.gradle.jokes.Joker;
 
 
 public class MainActivity extends AppCompatActivity {
 
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build()
+        );
     }
 
 
@@ -49,7 +61,16 @@ public class MainActivity extends AppCompatActivity {
         //Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
         Toast.makeText(this,joker.getJoke(),Toast.LENGTH_SHORT).show();
         //launchLibraryActivity(view);
+        showInterstitialAd();
         new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+    }
+
+    public void showInterstitialAd(){
+        if(mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+        }else{
+            Log.d("showInterstitial","the interstitial wasn't loaded yet..");
+        }
     }
 
     public void launchLibraryActivity(View view){
