@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
+import android.view.View;
 import android.widget.Toast;
 
-import com.example.mylibrary.MainActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -18,6 +18,16 @@ import java.io.IOException;
 public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
     private static MyApi myApiService = null;
     private Context context;
+    private EndpointsCallback mCallback;
+
+    public interface EndpointsCallback {
+        void onTaskFinished(String results);
+    }
+
+    public EndpointsAsyncTask(EndpointsCallback callback){
+        //this.context=c;
+        this.mCallback=callback;
+    }
 
     @Override
     protected String doInBackground(Pair<Context, String>... params) {
@@ -30,7 +40,7 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
                     .setRootUrl("http://10.0.2.2:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
-                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) {
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
@@ -51,10 +61,11 @@ public class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, S
 
     @Override
     protected void onPostExecute(String result) {
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
-
-        Intent intent = new Intent(context,MainActivity.class);
+        //Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        //com.udacity.gradle.builditbigger.MainActivity.joke=result;
+        mCallback.onTaskFinished(result);
+/*        Intent intent = new Intent(context,MainActivity.class);
         intent.putExtra(MainActivity.JOKE_KEY,result);
-        context.startActivity(intent);
+        context.startActivity(intent);*/
     }
 }

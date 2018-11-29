@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:textSize="24dp"
         android:id="@+id/fragment_main_tv"
+        android:text="test test test"
         />
 
 </LinearLayout>
