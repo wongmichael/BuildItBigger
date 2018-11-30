@@ -17,8 +17,8 @@ import com.udacity.gradle.jokes.Joker;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String joke;
-    public ProgressBar spinner;
+    public String joke;
+    //public ProgressBar spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +51,28 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view) {
+    public void tellJoke(final View view) {
         //Joker joker = new Joker();
         //Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
         //Toast.makeText(this,joker.getJoke(),Toast.LENGTH_SHORT).show();
         //launchLibraryActivity(view);
         //spinner.setVisibility(View.VISIBLE);
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
+        new EndpointsAsyncTask(new EndpointsAsyncTask.EndpointsCallback() {
+            @Override
+            public void onTaskFinished(String results) {
+                //spinner.setVisibility(View.GONE);
+                if(results!=null){
+                    joke=results;
+                    Log.d("onTaskFinished",joke);
+                    //showInterstitialAd();
+                    launchLibraryActivity(view);
+                } else{
+                    //instructionsTv.append("\n No joke found.");
+                    Toast.makeText(getApplicationContext(),"No joke found.",Toast.LENGTH_LONG);
+                    Log.d("telljoke","no data found");
+                }
+            }
+        }).execute(new Pair<Context, String>(this,"Manfred"));
         //showInterstitialAd();
     }
 
@@ -65,7 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchLibraryActivity(View view){
         Intent intent = new Intent(this, com.example.mylibrary.MainActivity.class);
-        intent.putExtra(com.example.mylibrary.MainActivity.JOKE_KEY,new Joker().getJoke());
+        //intent.putExtra(com.example.mylibrary.MainActivity.JOKE_KEY,new Joker().getJoke());
+        intent.putExtra(com.example.mylibrary.MainActivity.JOKE_KEY,joke);
         startActivity(intent);
         //Toast.makeText(this,"test test",Toast.LENGTH_LONG).show();
     }

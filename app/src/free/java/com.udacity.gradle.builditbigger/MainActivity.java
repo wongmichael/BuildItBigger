@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     public String joke;
     public ProgressBar spinner;
+    //public TextView instructionsTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         spinner = findViewById(R.id.progressBar1);
+        //instructionsTv = findViewById(R.id.instructions_text_view);
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
@@ -39,10 +43,10 @@ public class MainActivity extends AppCompatActivity {
         mInterstitialAd.setAdListener(new AdListener(){
             @Override
             public void onAdClosed() {
-                Intent intent = new Intent(getApplicationContext(), com.example.mylibrary.MainActivity.class);
-                intent.putExtra(com.example.mylibrary.MainActivity.JOKE_KEY,joke);
-                getApplicationContext().startActivity(intent);
                 mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()); //load next interstitial
+                Intent intent = new Intent(MainActivity.this, com.example.mylibrary.MainActivity.class);
+                intent.putExtra(com.example.mylibrary.MainActivity.JOKE_KEY,joke);
+                startActivity(intent);
             }
         });
     }
@@ -83,7 +87,12 @@ public class MainActivity extends AppCompatActivity {
                 spinner.setVisibility(View.GONE);
                 if(results!=null){
                     joke=results;
+                    Log.d("onTaskFinished",joke);
                     showInterstitialAd();
+                } else{
+                    //instructionsTv.append("\n No joke found.");
+                    Toast.makeText(getApplicationContext(),"No joke found.",Toast.LENGTH_LONG);
+                    Log.d("telljoke","no data found");
                 }
             }
         }).execute(new Pair<Context, String>(this,"Manfred"));
@@ -95,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
             mInterstitialAd.show();
         }else{
             Log.d("showInterstitial","the interstitial wasn't loaded yet..");
+            mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()); //load next interstitial
+            mInterstitialAd.show();
         }
     }
 
